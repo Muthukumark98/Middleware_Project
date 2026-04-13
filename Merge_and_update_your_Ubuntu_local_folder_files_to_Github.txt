@@ -1,0 +1,376 @@
+Scenario:
+
+1.Ubuntu local folder (Project)
+2.Github repo
+3.Need to push+merge updates
+#############################################################################
+Step 1: Install Git (if not installed)
+
+#Command: sudo apt update
+          sudo apt install git -y
+
+#check: git --version
+############################################################################
+Step 2: Configure Git (first time only)
+
+#Command : git config --global user.name "Your Name"
+           git config --global user.email "Your-email@example.com"
+############################################################################
+Step 3: Go to Your Project Folder
+
+#Command: cd /path/to/your/project
+############################################################################
+
+Step 4: Add Remote Github Repo
+
+Copy your URL from Github
+
+#Command: git remote add origin https://github.com/username/repo.git
+
+Check: git remote -v
+#############################################################################
+
+Step 6: Add Files to Staging
+
+#Command: git add .
+#############################################################################
+Step 7: Commit Changes
+
+#Command: git commit -m "Initial commit or update"
+
+#############################################################################
+Step8: Pull Latest (VERY IMPORTANT for merge)
+
+@Avoid conflicts
+
+#Command: git pull origin main --rebase
+
+If your baranch is master: 
+
+#Command: git pull origin master --rebase
+
+############################################################################
+
+Step 9: Push to Github
+
+#Command: git push origin main
+
+If You Already Have Repo (Update Existing Project)
+
+#Command: cd Project
+          git status
+          git add .
+          git commit -m "update files"
+          git pullm origin main --rebase
+          git push origin main
+
+#############################################################################
+#############################################################################
+
+Merge Conflict Handling
+
+If conflict comes:
+
+#Command: CONFLICT(content): Merge conflict in file.txt
+
+#Open file:
+
+#Command: vi file.txt
+
+You'll see:
+            <<<<<<<< HEAD
+            your code
+            =======
+            github code
+            >>>>>>> branch
+
+Fix manually
+Then:
+
+#Command: git add 
+          git rebase --continue
+          git push origin main
+
+##################################################################################
+Autentication (Important)
+
+Github longer supports password --> use Personal Access token (PAT)
+
+When pushing:
+             Username --> your GitHub username
+             Password --> paste PAT
+
+####################################################################################
+
+Real Interview Answer: To update Ubuntu files to Github, I intialize Git, stage and commit changes, pull latest updates using
+                       rebase to avoid conflicts, and push to the remote repository. I handle merge conflicts manually and follow
+                       branching strategy for safe deployments.
+
+
+PRATICAL _ LAB:
+
+#Commands: 
+
+iamkadhalan@iamkathalan:~$ git --version
+git version 2.43.0
+
+#Troubleshooting: 
+
+Error 1: root@iamkathalan:/home/iamkadhalan/Documents/Middleware_Project/Github# git remote -v
+         fatal: not a git repository (or any of the parent directories): .git
+
+#Solution: 
+ 
+#Meaning : Your folder is NOT initialized as a Git repository (no .git directory present)
+
+Fix Step-by-Step:
+
+Step 1: Go to correct folder (confirm path)
+
+#Command: cd /home/iamkadhalan/Documents/Middleware_Project/Github
+          pwd
+          ls -la
+
+####################################################################
+Step 2: Initialize Git
+
+#Command: git init
+
+Now verify: ls -la
+
+#Command: .git/
+
+###################################################################
+Step 3: Add Remote Repo
+
+#Command: git remote add origin https://github.com/Muthukumark98/Middleware_Project.git
+
+#Check : git remote -v
+
+Output: root@iamkathalan:/home/iamkadhalan/Documents/Middleware_Project/Github# git remote -v
+        origin	https://github.com/Muthukumark98/Middleware_Project.git (fetch)
+        origin	https://github.com/Muthukumark98/Middleware_Project.git (push)
+
+Step 4: Add + Commit
+
+#Command: git add .
+          git commit -m "Initial commit"
+
+Step 5: Push to Github
+
+#Command: git branch -M main
+          git push -u origin main
+
+###### GitHub Commmand #####
+echo "# Middleware_Project" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Muthukumark98/Middleware_Project.git
+git push -u origin main
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
