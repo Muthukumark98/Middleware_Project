@@ -1,0 +1,85 @@
+1.How to choose middleware for a client
+
+Approach 
+Step 1: Understand Requirements
+        Application type (Java EE,microservices,legacy)
+        Load(Users,tarnsactions/sec)
+        HA/DR requirement
+        Budget
+
+Step 2: Compare Tools
+Tool                     Best For
+
+JBoss EAP                Open-source,cost-effective,Red Hat ecosystem
+WebSphere                Enterprise banking apps,strong security
+Weblogic                 Oracle stack integration
+
+If client wants cost-effective+Red Hat support --> JBoss
+If enterprise banking-grade stability --> WebSphere
+If Oracle ecosystem --> Weblogic
+##########################################################################################
+2. Fresh Installation(JBoss EAP):
+
+Command:  # Create user
+          useradd jboss
+
+          # Extract
+          unzip jboss-eap-7.x.zip -d /opt/
+
+          # Set ownership
+          chown -R jboss:jboss /opt/jboss-eap-7.x
+
+          # Start standalone
+          cd /opt/jboss-eap-7.x/bin
+          ./standalone.sh 
+
+For domain: 
+
+Command: ./domain.sh
+
+3.Apply Fix Packs (JBoss CLI)
+
+Command: cd /opt/jboss-eap/bin
+
+         # Connect CLI
+         ./jboss-cli.sh --connect
+
+         # Apply patch
+         patch apply /path/to/patch.zip
+
+         # Verify
+         patch info
+
+         # Rollback
+         patch rollback
+
+4.Integrate JBoss with Apache (mod_proxy)
+
+httpd.conf:
+
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+
+ProxyPass /app http://localhost:8080/app
+ProxyPassReverse /app http://localhost:8080/app
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
