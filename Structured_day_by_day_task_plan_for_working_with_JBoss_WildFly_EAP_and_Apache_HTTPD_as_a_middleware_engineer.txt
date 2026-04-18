@@ -1,0 +1,111 @@
+Here's a structured **day-by-day task plan** for working with **JBoss (WildFly/EAP)** and **Apache HTTPD** as a middleware engineer:
+
+---
+
+## 🗓️ Week 1 – Installation & Basic Setup
+
+| Day | Task |
+|-----|------|
+| **Day 1** | Install JBoss EAP / WildFly on Linux/Windows, verify startup, access admin console |
+| **Day 2** | Install Apache HTTPD, configure basic `httpd.conf`, start/stop/restart service |
+| **Day 3** | Configure JBoss standalone vs domain mode, understand directory structure |
+| **Day 4** | Enable/configure Apache Virtual Hosts, test with sample HTML pages |
+| **Day 5** | Deploy a sample WAR/EAR application on JBoss via CLI and Admin Console |
+
+---
+
+## 🗓️ Week 2 – Integration & Connectivity
+
+| Day | Task |
+|-----|------|
+| **Day 6** | Install and configure **mod_jk** or **mod_proxy** to connect Apache HTTPD ↔ JBoss |
+| **Day 7** | Configure **AJP connector** in JBoss, test proxying requests from Apache to JBoss |
+| **Day 8** | Set up **mod_proxy_balancer** for load balancing between two JBoss instances |
+| **Day 9** | Configure **workers.properties** (mod_jk) for multiple JBoss nodes |
+| **Day 10** | Test failover – stop one JBoss node, verify Apache routes to the other |
+
+---
+
+## 🗓️ Week 3 – Security Configuration
+
+| Day | Task |
+|-----|------|
+| **Day 11** | Enable **SSL/TLS** on Apache HTTPD using self-signed certificates (OpenSSL) |
+| **Day 12** | Configure **HTTPS** on JBoss using keystore, update `standalone.xml` |
+| **Day 13** | Set up **SSL termination** at Apache, pass HTTP to JBoss backend |
+| **Day 14** | Configure **Basic/Form Authentication** in JBoss (Elytron security domain) |
+| **Day 15** | Harden Apache HTTPD – disable unnecessary modules, set security headers |
+
+---
+
+## 🗓️ Week 4 – Performance & Tuning
+
+| Day | Task |
+|-----|------|
+| **Day 16** | Tune JBoss **JVM heap size** (`-Xms`, `-Xmx`), GC settings in `standalone.conf` |
+| **Day 17** | Configure **thread pools** and **connection limits** in JBoss undertow subsystem |
+| **Day 18** | Enable **Apache mod_cache** and **mod_deflate** for compression & caching |
+| **Day 19** | Configure **KeepAlive**, `MaxRequestWorkers`, `Timeout` in Apache HTTPD |
+| **Day 20** | Run load tests using **Apache JMeter** or **ab (ApacheBench)** |
+
+---
+
+## 🗓️ Week 5 – Logging & Monitoring
+
+| Day | Task |
+|-----|------|
+| **Day 21** | Configure **JBoss logging** – log levels, file handlers, log rotation |
+| **Day 22** | Configure **Apache access logs** and **error logs**, custom log formats |
+| **Day 23** | Integrate JBoss with **JConsole / VisualVM** for JVM monitoring |
+| **Day 24** | Set up **Apache mod_status** for real-time server monitoring |
+| **Day 25** | Analyze logs using **grep, awk** or tools like **GoAccess / Splunk** |
+
+---
+
+## 🗓️ Week 6 – High Availability & Clustering
+
+| Day | Task |
+|-----|------|
+| **Day 26** | Set up **JBoss Domain Mode** with host controller and managed servers |
+| **Day 27** | Configure **JBoss clustering** with Infinispan / JGroups |
+| **Day 28** | Set up **session replication** between JBoss cluster nodes |
+| **Day 29** | Configure **sticky sessions** in Apache mod_proxy_balancer |
+| **Day 30** | Test cluster failover and session persistence end-to-end |
+
+---
+
+## 🗓️ Week 7 – Datasource & Deployment
+
+| Day | Task |
+|-----|------|
+| **Day 31** | Configure **JDBC datasource** in JBoss (MySQL/PostgreSQL/Oracle) |
+| **Day 32** | Deploy and test a **database-connected application** on JBoss |
+| **Day 33** | Configure **connection pooling** in JBoss datasource (min/max pool size) |
+| **Day 34** | Use **JBoss CLI** for scripted deployments and configuration changes |
+| **Day 35** | Automate deployment using **shell scripts** or **Ansible playbooks** |
+
+---
+
+## 🗓️ Week 8 – Troubleshooting & Maintenance
+
+| Day | Task |
+|-----|------|
+| **Day 36** | Diagnose and fix **OutOfMemoryError** in JBoss using heap dumps |
+| **Day 37** | Troubleshoot **503/502 errors** in Apache proxy configuration |
+| **Day 38** | Analyze **thread dumps** in JBoss for deadlock/performance issues |
+| **Day 39** | Perform **JBoss patch/upgrade** on a test environment |
+| **Day 40** | Document runbook – startup, shutdown, deployment, rollback procedures |
+
+---
+
+## 📌 Daily Habits (Every Day)
+
+- ✅ Check JBoss server logs (`server.log`)
+- ✅ Check Apache error and access logs
+- ✅ Monitor CPU, memory, disk usage
+- ✅ Verify application availability (health check URLs)
+- ✅ Review any alerts from monitoring tools
+
+---
+
+Would you like a **detailed guide** on any specific day's task, or want this converted into a **document or spreadsheet**?
