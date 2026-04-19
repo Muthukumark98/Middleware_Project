@@ -4,4 +4,3 @@ httpd.conf
 ssl.conf
 standalone-ha.xml
 Start.sh
-
