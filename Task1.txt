@@ -1,0 +1,7 @@
+standalone.conf
+standalone.xml
+httpd.conf
+ssl.conf
+standalone-ha.xml
+Start.sh
+
