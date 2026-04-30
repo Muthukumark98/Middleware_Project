@@ -1,0 +1,227 @@
+info:
+  component: Edge Server
+  
+endpoints:
+  actuator:
+    enabled: true
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+management:
+  security:
+    enabled: false       
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: https://cpprod.iob.in:1010/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+      
+logging:
+  level:
+    com.sai.connectperfect: trace
+    org.springframework.jdbc: debug
+    springfox.documentation: debug
+    org.springframework.jdbc.core: trace
+    
+connectperfect: 
+  enabledSecurityCheck: false
+  allowedHosts: 'localhost,connectperfect.io'
+
+#spring:
+#  profiles: dev
+#  redis:
+#    host: localhost
+#    port: 6379
+#  session:
+#    store-type: redis
+    
+zuul:
+  semaphore.max-semaphores: 500
+#  ribbon-isolation-strategy: THREAD
+#  threadPool:
+#    useSeparateThreadPools: false
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 20000
+  MaxConnectionsPerHost: 500
+  MaxTotalConnections: 500
+  eureka:
+    enabled: true
+
+
+#transunion.ribbon.MaxConnectionsPerHost: 500
+#transunion.ribbon.MaxTotalConnections: 500
+
+hystrix: 
+  command: 
+    default: 
+      circuitBreaker.enabled: false
+      fallback.enabled: true
+      fallback.isolation.semaphore.maxConcurrentRequests: 100
+      execution.isolation.semaphore.maxConcurrentRequests: 500
+#  execution.isolation.thread.timeoutInMilliseconds: 60000
+#  threadpool: 
+#    default: 
+#      coreSize: 300
+#      keepAliveTimeMinutes: 1
+#      allowMaximumSizeToDivergeFromCoreSize: true
+#      maximumSize: 300
+#      maxQueueSize: 300
+#      queueSizeRejectionThreshold: 300
+
+ 
+spring:
+  application:
+    name: gateway
+  http: 
+    multipart: 
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+  jmx:
+    enabled: false    
+  profiles: 
+   active:
+     ON_PREMISE
+ 
+---
+spring:
+  profiles: ON_CLOUD   
+datasource:
+  connectperfect:
+     url: jdbc:postgresql://192.168.0.172:5432/CP_ONCLOUD_UAT1
+     username: postgres
+     password: postgres
+     driverClassName: org.postgresql.Driver
+     testOnBorrow: true
+     testWhileIdle: true
+     timeBetweenEvictionRunsMillis: 30000
+     minEvictableIdleTimeMillis: 30000
+     validationQuery: SELECT 1
+     max-active:  15
+     max-idle: 10
+     max-wait: 8000
+     defaultSchema:
+     maxPoolSize: 350
+     hibernate:
+           hbm2ddl.method:  none 
+           show_sql: true
+           format_sql: false
+           dialect: org.hibernate.dialect.PostgreSQLDialect
+connectperfect:
+  packages: com.sai.connectperfect.common,com.sai.connectperfect.oncloud
+
+server:
+  port: 9153
+
+zuul:
+  sensitiveHeaders:
+  host:
+    socket-timeout-millis: 30000
+  routes:    
+    truthscreen: 
+      path: /api/v1.0/cpts/**
+      serviceId: truthscreen
+    truthscreenv2: 
+      path: /api/v2.0/cpts/**
+      serviceId: truthscreen
+      stripPrefix: false
+    webui:
+      path: /app/**
+      serviceId: webui
+    crimecheck:
+      path: /api/v1.0/crimecheck/**
+      serviceId: crimecheck
+    signzy:  
+      path: /api/v1.0/signzy/**
+      serviceId: signzy
+    karza:
+      path: /api/v1.0/karza/**
+      serviceId: karza
+---           
+spring:
+  profiles: ON_PREMISE
+  jpa:
+   hibernate:
+    use-new-id-generator-mappings: true
+datasource:
+  connectperfect:
+     url: jdbc:oracle:thin:@172.26.78.13:1803:LENDPROD
+     username: IOB_CP_PROD
+     password: laps
+     driverClassName: oracle.jdbc.driver.OracleDriver
+     testOnBorrow: true
+     testWhileIdle: true
+     timeBetweenEvictionRunsMillis: 30000
+     minEvictableIdleTimeMillis: 30000
+     validationQuery: SELECT 1 from DUAL
+     max-active: 15
+     max-idle: 10
+     max-wait: 8000
+     defaultSchema:
+     maxPoolSize: 250
+     hibernate:
+           hbm2ddl.method: none
+           show_sql: false
+           format_sql: true
+           dialect: org.hibernate.dialect.Oracle10gDialect 
+           ##########spring.jpa.hibernate.use-new-id-generator-mappings=false#############
+connectperfect: 
+  proxy: 
+    enabled: false
+    host: 127.0.0.1
+    port: 8080
+    scheme: http
+  packages: com.sai.connectperfect.onpremise,com.sai.connectperfect.common
+  service :  https://cpwebprod.iob.in:1702/cloud-gateway
+  ui : https://cpwebprod.iob.in:1702/cloud-ui
+  cloud: 
+      url: https://cpwebprod.iob.in:1702/cloud-gateway/
+  serviceFailureNotifyUrl :  ${connectperfect.ui}/service/service-failure-notification 
+  premiseUpdateTransactionUrl : ${connectperfect.cloud.url}utility/update-premise-transaction    
+scoreme : 
+   port : 9000
+   host : 192.168.0.89  
+   mode : dev
+   
+server:
+  port: 1011
+  url: https://cpprod.iob.in:1011/                            
+
+zuul:
+  sensitiveHeaders:
+  host: 
+    socket-timeout-millis: 180000
+  routes:
+    cloud: 
+      path: /api/**
+      url: https://cpwebprod.iob.in:1702/
+      stripPrefix: false
+  
+---
+connectperfect: 
+  header: false 
+  input: false 
+  clientId: 11
+  dbDump: false
+  dumpSuccessOnly: false
+  useLegacyDbDump: false
+  failureCount: 5
+  highFailureCount: 30
+  key: 770A8A65DA156D24EE2A093277530142
+  creditcheck: false
+Encrypt:  
+  publicKey: MIIFpzCCA4+gAwIBAgIJAO7DWLkj9m1wMA0GCSqGSIb3DQEBCwUAMGoxCzAJBgNVBAYTAklOMRIwEAYDVQQIDAlUYW1pbG5hZHUxEDAOBgNVBAcMB0NoZW5uYWkxDzANBgNVBAoMBlN5c0FyYzEMMAoGA1UECwwDRElUMRYwFAYDVQQDDA0xOTIuMTY4LjAuMTY1MB4XDTIxMTIwMTExMDM1MFoXDTMxMTEyOTExMDM1MFowajELMAkGA1UEBhMCSU4xEjAQBgNVBAgMCVRhbWlsbmFkdTEQMA4GA1UEBwwHQ2hlbm5haTEPMA0GA1UECgwGU3lzQXJjMQwwCgYDVQQLDANESVQxFjAUBgNVBAMMDTE5Mi4xNjguMC4xNjUwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDIElyMfEb2B2ic6S2aXboUtoY+brhbPVn1vjo7xzmPIPEMmeUddVrQignfWWX4UD5f2VFVkZ2EVw8zfxmkln5H7wjrbp1shPz5dEfDvYWZ2oI/fE4dy0MtZyLJLwskj/FPfc7zpsH5QzLZrttgNc49uQhzxvlNlUgC9vjluJRB1IR7Ref7zM1YYgzvbEeg9Pe71wsvy6p3E5wvTiZn19qYzQPY/qmDdq+tk2guFQuDYeL4Z+JpUnyfREcZeIpUhofb58y1QsJW3VmxWyb/cmngabP+xTZ1vD0d1C0pvG3pN0b8nlJawv/rlAgjTchKEEr+jSl31JC2+ij7sdpsrjkszZjwZEWRAtSTaz455OpzTF4pI9IqM9BrhTGFYOx9WbwXtU3I/yT3furUjnjHaMwqbYsx9n3uNWpm5n3wvXqh87Xj11YcKhl/HrjoVZh8HqRVI92jXqymoeVBCyJXTfsNkfVeTIomtfF/qwsPkY9v/6bsLFVCpuRwGYxLgsLQ96YptU92oohF/zB08yEOSHk3dLq/qn6u6vw8sx9T9YpVcKJ5C21bK1d3ml+89Md92fzH/M3DIOIqFqH6x7cVhhw3oBYfDPj0UQ/iRvgIwSoCF81OdH4A2uOX/Uyy8csZAdVz2vOy1N92QHa9YxICyyjlrXqU26aGwelTKtyEiGtCJwIDAQABo1AwTjAdBgNVHQ4EFgQU2TVin23KE5DUuvycq0HuVo1WhHAwHwYDVR0jBBgwFoAU2TVin23KE5DUuvycq0HuVo1WhHAwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAgEAeqTjNNZFE4WNMDQBpWTkDVuXWo7/xpfEARUdcy9qia1aUpPVA5MKd4sgp9wQ6HhXnx7UbFAUYDwzj9sJ+X0inWch+LsY7zrSVx7DoBVaG8tBHhPoRM5orKfY5i+6L20VtzMGecTcnzU6j4rCx7w6CGZ5v7aE8bSVfV1OIEZx0AZ7Ep+UyJwCgZ1LBoRLTfty0ycgfFh4ts6RjDvZ0ewBdp7JB7vzayq1iJdH7mq7goQdt2XbbyLk3+W8j4zJ1U8pxSey8E7BobEmt4hk4A2OVdLl3e1dxTASxOrcsXRfLD+EqnfrXbJV19wR/mHCkvdjuCEnd0zp5lRWvbesqlvbPz2tRq46M561iyYHqPC0Qhtsa9H1wEcyxhd4j9OhqOddaVwlyJk2Kdtli3vODHovRSvtz9qgbhktp0frXucmQcc1cdre1UWcn9+1FV7rVIVp1xkasyXqV04gO0fEFbWccGa6FVw6L2yJw6r1KiAuicsQ7sD7xx5DsLQlUXI0eAOxTQSkbw5OvJcy4rlFonwIUM+91DiWhp6pdn16md3iaIslP5ZezcFvbOMicwOV4ERxknf7+SlHWd8hYQ0QrTyM1Kw2Lk17+HsbL0yLRWeZQI6LKUNXauJ17RuIxF6/1xV0jB1IJFVH12VL25qWlMhEDrhZexmO/m7KryFKwW9SCFQ=
+  privateKey: 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
+---
+Decrypt:
+  publicKey: MIIFpTCCA42gAwIBAgIJAOOXzQYUCp1AMA0GCSqGSIb3DQEBCwUAMGkxCzAJBgNVBAYTAklOMRIwEAYDVQQIDAlUYW1pbG5hZHUxEDAOBgNVBAcMB0NoZW5uYWkxDzANBgNVBAoMBlN5c0FyYzELMAkGA1UECwwCSVQxFjAUBgNVBAMMDTE5Mi4xNjguMC4xMzYwHhcNMjExMjAxMTA1NzM4WhcNMzExMTI5MTA1NzM4WjBpMQswCQYDVQQGEwJJTjESMBAGA1UECAwJVGFtaWxuYWR1MRAwDgYDVQQHDAdDaGVubmFpMQ8wDQYDVQQKDAZTeXNBcmMxCzAJBgNVBAsMAklUMRYwFAYDVQQDDA0xOTIuMTY4LjAuMTM2MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAqEZ9L6c1RzxO1Y4GujdTIviCcEH6ITTJlpXXhqaAeCPWrfUs3JRorAn4TLMEuZMCMWCxJ6NvX4BRG6BEkw7c5+XpubezW6cunvGoCmGK9Jzaj6RnYIf4+Zcvwys0TR+vrxet0tGLpj973RaTr+2W8iJCMos0t7uQLVgjf4M30synwYy9HXb7KcC27UQ97bb+9DD7kfWYHLFqPXb1SQiSnn7EzgA1MG7NxJKbFrV1c3zUXzKUJS/daXkAq6dSLBlr32O1HE6xQPY5Q8pvu9UXmaPgoJiYw0Pgc3BXxDoxjEOkSIECtNBWoj6fmZ++h5ERUZD+VxG19pI8L+tUCm8eY8ssL59B9tHPgFWRo4IzMqY4k/kS1gYQOT2F4d1/oHZhwx+6su88KZrY4jcmo0KCeOf6AWEXMIbeGB+h6dEJIocy/Ykd1G2nPqD7iUhthHxMMGoFehC0XWnewzd6B4f9N8Ce756WayecAOXUW42+36Bsbc7BX0VPqPlu472YUilsXVmOjqJCNfYEu5cqKch8cKUwfPgY51J12/K1KcVEGUWv58Z3XV1gFxXPTlAFOvVdhwnbIqLdGuHzTTJeuykeXkDFMD526QjQcyoE2hKNRXR104brcOE7mr81b9MRmXUDOERA8wPdrGq2uSAI+GLxqoojBU39Mm7zWQasJqHjB6sCAwEAAaNQME4wHQYDVR0OBBYEFJZ0VvigEPqylKNfLnpARB+UGT1MMB8GA1UdIwQYMBaAFJZ0VvigEPqylKNfLnpARB+UGT1MMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggIBAGUdkTYhrS8k+biT8jWXnz/Wqu8f8nyPSv/FQOZI26X7x8MFSEvMW9/ocCcg6g9lUFmulrIUufreJQNrj3VAdwo/4ROEeyxmnPc1MxYMX76crsicfYGK/CA2USUagpmO9FNm/G37J32u/xp3UBy1beFzawCrofmTrwNuE2KLbwgNm46B03dMi/oDcsFT2pNwFyoY211ocgzGKzr8Sfxzc1Xb8No7aHPU+K+/uMpxd7xZgrooPLshzlTerlAijq0DTUSv26kwA1rW6BjSwXNxX0is7/t2GFWE3cKFptxfbI1xFvxqIeSFWNNUIDDLkVLMmweqvEPV0rwCZ99Xa/BBmKwABiKtfAdCEhw7wmlEOny0coRDBPtwGbfe6rOMsMWp8wgqGFiwITkTTtUf8LEvAYCTQJaaticEJ9KdY3fbWlD6+gZIFq+JIvgWS5HZDzrYU3wUEuoxvcnBkgw6oFy0zPP8MNRHe2oVc5/tJtCn9q8VNvRmbSPvj1C76FVK5paTvzgehTBS6o4cNAt2uQvnJ7lECtwGua65BTKXBR5xaa1ipmokxGi750G0c7z+qy6prkZFHMP5EcRlt3etGlQItx9rWKwfpZPgNsjFvzpFIAPO04vFXLWTiUyKSDKSkBFxOVx5rvv69h++5mBocjr2UDMIk4+9Ts/5IRp3lDcA7Ftb
+  privateKey: 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

@@ -1,0 +1,133 @@
+---
+# profile for dev
+spring:
+  profiles: dev
+datasource:
+  lendperfect:
+    url: jdbc:oracle:thin:@172.26.78.13:1803:LENDPROD
+    username: IOB_LEND_PROD
+    password: laps
+---
+# profile for test
+spring:
+  profiles: test
+datasource:
+  lendperfect:
+    url: jdbc:oracle:thin:@172.26.78.13:1803:LENDPROD
+    username: IOB_LEND_PROD
+    password: laps
+---
+# profile for production
+spring:
+  profiles: prod
+  datasource:
+    jndi-name: java:/lpDS0
+---
+
+# Common configuration for all environment
+spring: 
+ profiles: 
+  active: prod
+ datasource:
+  name: dev
+ jackson: 
+  serialization:
+   fail-on-empty-beans: false
+ mail: 
+  username : pmcblapsteam@sysarcinfomatix.com
+  password : 'PMCB##2016'
+  host : 192.168.0.152
+  port: 25
+  protocol: smtp
+  defaultEncoding: UTF-8
+  properties: 
+    mail:
+      smtps:
+        auth: true
+        starttls:
+          enable: true
+          required: true
+        ssl:
+          checkserveridentity: false
+          trust: '*'
+  debug: false
+ http: 
+  multipart: 
+    maxFileSize: 5MB
+    maxRequestSize: 100MB
+
+datasource: 
+  lendperfect:
+   type: com.zaxxer.hikari.HikariDataSource
+   driverClassName: oracle.jdbc.driver.OracleDriver
+   hibernate: 
+    hbm2ddl:
+      method: auto
+    show_sql: false
+    format_sql: true
+    dialect: org.hibernate.dialect.Oracle10gDialect
+    hikari:
+      maximum-pool-size: 75
+
+datasource1:
+  cbs:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    #url: jdbc:oracle:thin:@172.30.143.157:1523:CHRIS
+    url: jdbc:oracle:thin:@172.28.101.105:1523:CHRIS
+    username: losuser
+    password: Simple#12345
+datasource2:
+  capitaretail:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@172.26.78.13:1803:LENDPROD
+    username: IOB_LEND_PROD
+    password: laps
+    
+datasource3:
+  cplplogging:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    jdbc-url: jdbc:oracle:thin:@172.26.78.13:1803:LENDPROD
+    username: IOB_CP_PROD
+    password: laps 
+
+datasource4:
+  lendsecurity:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@172.26.78.13:1803:LENDPROD
+    username: IOB_SPEC_PROD
+    password: laps 
+    
+nativeQuery:
+ dataBase: oracle.xml
+
+server: 
+  port: 9010
+  contextPath: /lendperfect
+  session:
+    timeout : 1800
+    cookie:
+      secure: false
+      name: MYSESSIONID
+      
+socketServer:
+  ip: '10.100.7.5'
+  port: 7771
+  
+crossorigin:
+  url: '*'
+  
+management: 
+  context-path: /manage
+name: 192.168.0.150
+testing: 'lendperfect : ${server.port}'
+
+sample: 
+  methodName: 'No method called yet'
+  
+scheduler:
+  enabled: true 
+

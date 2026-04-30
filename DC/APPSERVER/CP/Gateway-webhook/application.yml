@@ -1,0 +1,206 @@
+info:
+  component: Edge Server
+  
+endpoints:
+  actuator:
+    enabled: true
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+management:
+  security:
+    enabled: false       
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: https://cpprod.iob.in:1010/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+      
+logging:
+  level:
+    com.sai.connectperfect: trace
+    org.springframework.jdbc: debug
+    springfox.documentation: debug
+    org.springframework.jdbc.core: trace
+    
+connectperfect: 
+  enabledSecurityCheck: false
+  allowedHosts: 'localhost,connectperfect.io'
+
+zuul:
+  semaphore.max-semaphores: 500
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 20000
+  MaxConnectionsPerHost: 500
+  MaxTotalConnections: 500
+  eureka:
+    enabled: true
+
+hystrix: 
+  command: 
+    default: 
+      circuitBreaker.enabled: false
+      fallback.enabled: true
+      fallback.isolation.semaphore.maxConcurrentRequests: 100
+      execution.isolation.semaphore.maxConcurrentRequests: 500
+ 
+spring:
+  application:
+    name: gateway-webhook
+  http: 
+    multipart: 
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+  jmx:
+    enabled: false    
+  profiles: 
+   active:
+     ON_PREMISE 
+
+---           
+spring:
+  profiles: ON_PREMISE
+  jpa:
+   hibernate:
+    use-new-id-generator-mappings: true
+datasource:
+  connectperfect:
+     url: jdbc:oracle:thin:@172.26.78.13:1803:LENDPROD
+     username: IOB_CP_PROD
+     password: laps
+     driverClassName: oracle.jdbc.driver.OracleDriver
+     testOnBorrow: true
+     testWhileIdle: true
+     timeBetweenEvictionRunsMillis: 30000
+     minEvictableIdleTimeMillis: 30000
+     validationQuery: SELECT 1 from DUAL
+     max-active: 15
+     max-idle: 10
+     max-wait: 8000
+     defaultSchema:
+     maxPoolSize: 350
+     hibernate:
+           hbm2ddl.method: none
+           show_sql: false
+           format_sql: true
+           dialect: org.hibernate.dialect.Oracle10gDialect 
+           ##########spring.jpa.hibernate.use-new-id-generator-mappings=false#############
+connectperfect: 
+#  proxy: 
+#    enabled: false
+#    host: 127.0.0.1
+#    port: 8080
+#    scheme: http
+     packages: com.sai.connectperfect.onpremise,com.sai.connectperfect.common
+     service :  https://cpprod.iob.in:9151
+     premiseUpdateTransactionUrl : ${connectperfect.cloud.url}utility/update-premise-transaction
+#   
+scoreme : 
+   port : 9000
+   host : 192.168.0.89  
+   mode : dev
+
+callbackurl:
+  scoreme:
+    gst:
+       gstId: gstinreport
+       gstpan: gstbypan
+       gstretailmsme: http://
+       gstonlineretail: http://
+       gstonlinemsme: http://
+       gstautorenewal: https://172.31.8.7:9094/lendperfect/callbackresp/GstCallBack
+       getgstbypan: http://
+    itr:  
+      itrId: getitr
+      itrpdfId: itrfinancial
+      itrxmlId: xmlItrFileUpload
+      itrscannedId: scanneditr
+      itrackId: itracknowledgement
+      itrretailmsme: http://
+      itronlineretail: http://
+      itronlinemsme: http://
+    bsa:  
+      bsaId: uploadbankstatement
+      bsaretailmsme: https://los.iob.in:1801/lendperfect/webhookresp/getBankstatementresponsedata
+      bsaonlineretail: https://los.iob.in:1801/lendperfect/webhookresp/getBankstatementresponsedata
+      bsaonlinemsme: https://los.iob.in:1801/lendperfect/webhookresp/getBankstatementresponsedata
+      bsacreditcard: http://geniusccms.iob.in:8051/authify/v1/api/bank-service/callbackStatmentRequest 
+      autorenewalbsa: 
+      shishubsa:   
+    mca:  
+      mcaId: mca-detailed
+      mcacinId: mca-detailed
+      mcauploadId: mcafinancial
+      mcaretailmsme: http://test
+      mcaonlineretail: http://test
+      mcaonlinemsme: http://test
+  idfy:      
+    videokyc:
+      videokycId: 5
+      videokycCallbackuRL: http://test
+  cart:
+    itr:
+      itrId: 6
+      itrCallbackUrl: http://test
+    bsa:
+      bsaId: 7
+      bsaCallbackUrl: http://test
+    bsanet:
+      bsanetId: 8
+      bsanetCallbackUrl: http://test
+      
+  karza:
+    gst:
+      gstId: GSTTRRNOTP
+      gstCallbackuRL: https://los.iob.in:1801/lendperfect/webhookresp/getgstrresponse
+      shishugstCallbackuRL:
+    itr:
+      itrId: 10
+      itrCallbackuRL: http://test
+    mca:
+      mcaId: docdownload/mca/request
+      mcaCallbackuRL: http://test
+    cersai:
+      cersaiId: cersairequest
+      cersaiCallbackuRL: http://test
+  crimecheck:
+    crimerecord:
+      individualId: addCrimeIndividualReport
+      companyId: addCrimeCompanyReport
+      individualCallbackUrl: https://los.iob.in:1801/lendperfect/webhookresp/getCrimecheckResponsedata
+      companyCallbackUrl: https://los.iob.in:1801/lendperfect/webhookresp/getCrimecheckNonindividualResponsedata
+  legaldesk:
+    esign:
+       esignId: getesignrequest
+       esignCallbackuRL: http://geniusccms.iob.in:8051/authify/v1/api/ekyc-service/totalSignerCallback
+       esignIndvId: getesignrequest
+       esignIndvCallbackuRL: http://geniusccms.iob.in:8051/authify/v1/api/ekyc-service/individualSignerCallback
+  probe42:
+    comprehensiveresponse:
+       comprehensiveresponseId: cpp/comprehensiveapi/comprehensiveresponse
+       updateresponseId: cpp/comprehensiveapi/updatecomprehensivereport
+       comprehensiveresponseCallbackuRL: http://192.168.0.202:9091/lendperfect/LpServices/UpdatedPropcinServiceCallBack
+server:
+  port: 1013
+
+
+---
+connectperfect: 
+  header: false 
+  input: false 
+  clientId: 11
+  dbDump: false
+  dumpSuccessOnly: false
+  useLegacyDbDump: false
+  failureCount: 5
+  key: 770A8A65DA156D24EE2A0932775

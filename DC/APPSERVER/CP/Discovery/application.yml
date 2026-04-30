@@ -1,0 +1,15 @@
+server:
+  port: ${PORT:1010}
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: https://${eureka.instance.hostname}:1010/eureka/
+  server:
+    enableSelfPreservation: false
+spring:
+   freemarker:
+     prefer-file-system-access: false
